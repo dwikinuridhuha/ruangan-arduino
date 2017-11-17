@@ -1,7 +1,7 @@
 #include<LiquidCrystal.h>
 //Variabel PIR
 int ledPin = 13;                // Memilih pin untuk LED
-int inputPin = 2;               // Memilih input pin (untuk sensor PIR)
+int inputPin = 6;               // Memilih input pin (untuk sensor PIR)
 int pirState = LOW;             // Mengasumsi tidak ada gerakan terdeteksi
 int val = 0;                    // Variabel untuk membaca status pin
 int jumlah = 0;                 // variabel untuk menghitung masuk ornag
@@ -46,10 +46,10 @@ void loop(){
           jumlah++;
           
           Serial.print("Motion detected! "); // mencetak pada perubahan output, tidak menyatakan
-          Serial.print(jumlah);              // menampilkan pada konsole
+          Serial.println(jumlah);              // menampilkan pada konsole
 
-          Serial.print("suhu = ");           // just string
-          Serial.print(suhu);                // menampilkan nilai suhu
+          Serial.print("suhu = ");          // just string
+          Serial.println(suhu);                // menampilkan nilai suhu
           
           lcd.print(jumlah);                 // menampilkan pada LCD
           
@@ -63,7 +63,7 @@ void loop(){
           Serial.println("Motion ended!");   // mencetak pada perubahan output, tidak ada orang
           
           Serial.print("suhu = ");           // just string
-          Serial.print(suhu);                // menampilkan nilai suhu
+          Serial.println(suhu);                // menampilkan nilai suhu
           
           pirState = LOW;                    // di asumsikan tidak ada gerakan terdeteksi
     }
