@@ -31,7 +31,8 @@ void setup() {
 }
 
 void loop(){
-  lcd.setCursor(0, 1);                      // Memulai LCD
+  lcd.setCursor(8, 0);                      // Memulai LCD
+  
   val = digitalRead(inputPin);              // Membaca nilai masukan sensor PIR
   
   analogReference(INTERNAL);                // mengunakan Referensi 1.1 volt
@@ -52,6 +53,7 @@ void loop(){
           Serial.println(suhu);                // menampilkan nilai suhu
           
           lcd.print(jumlah);                 // menampilkan pada LCD
+          lcd.print(suhu);
           
           pirState = HIGH;                   // di asumsikan ada gerakan terdeteksi
       }
