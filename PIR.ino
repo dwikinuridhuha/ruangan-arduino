@@ -1,5 +1,7 @@
 #include<LiquidCrystal.h>
-//Variabel PIR
+
+//Variabel yang digunakan
+unsigned int cvHitung = 0;      // Hasil respon dari python
 int ledPin = 13;                // Memilih pin untuk LED
 int inputPin = 6;               // Memilih input pin (untuk sensor PIR)
 int pirState = LOW;             // Mengasumsi tidak ada gerakan terdeteksi
@@ -20,54 +22,60 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
-  pinMode(ledPin, OUTPUT);      // Mendeklarasikan LED sebagai output
-  pinMode(inputPin, INPUT);     // Mendeklarasikan sensor PIR sebagai input
-  pinMode(PinSuhu, INPUT);      // Mendeklarasikan sensor suhu sebagai input
-  
-  lcd.begin(16, 2);             // Setting awal nomor colum dan baris pada LCD
-  lcd.print("Orang = ");        // Menampilkan pesan orang
-  
   Serial.begin(9600);
+  
+  pinMode(ledPin, OUTPUT);                  // Mendeklarasikan LED sebagai output
+  pinMode(inputPin, INPUT);                 // Mendeklarasikan sensor PIR sebagai input
+  pinMode(PinSuhu, INPUT);                  // Mendeklarasikan sensor suhu sebagai input
+  
+  lcd.begin(16, 2);                         // Setting awal nomor colum dan baris pada LCD
+  lcd.print("Orang  ||Suhu");               // Menampilkan pesan orang
 }
 
 void loop(){
-  lcd.setCursor(8, 0);                      // Memulai LCD
+  lcd.setCursor(0, 1);                      // Memulai LCD
   
   val = digitalRead(inputPin);              // Membaca nilai masukan sensor PIR
   
   analogReference(INTERNAL);                // mengunakan Referensi 1.1 volt
   data = analogRead(PinSuhu);               // Membaca nilai masukan sensor Suhu
+
+  suhu = data / 9.309;                      // 5V mengunakan 2.0479; 1.1V(internal) mengunakan 9.309
   
   if (val == HIGH) {                        // Memeriksa apakah input adalah TINGGI
       digitalWrite(ledPin, HIGH);           // Hidupkan LED ON
-
-      suhu = data / 9.309;                  // 5V mengunakan 2.0479; 1.1V(internal) mengunakan 9.309
    
       if (pirState == LOW) {                // cek asumsi tidak ada gerakan
-          jumlah++;
-          
-          Serial.print("Motion detected! "); // mencetak pada perubahan output, tidak menyatakan
-          Serial.println(jumlah);              // menampilkan pada konsole
-
-          Serial.print("suhu = ");          // just string
-          Serial.println(suhu);                // menampilkan nilai suhu
-          
-          lcd.print(jumlah);                 // menampilkan pada LCD
-          lcd.print(suhu);
-          
-          pirState = HIGH;                   // di asumsikan ada gerakan terdeteksi
+          jumlah++;                         // menghhitung jumlah arus lewat
+          pirState = HIGH;                  // di asumsikan ada gerakan terdeteksi
       }
   } else {
       digitalWrite(ledPin, LOW);             // turn LED OFF
 
       if (pirState == HIGH) {                // cek asumsi ada gerakan
-          
-          Serial.println("Motion ended!");   // mencetak pada perubahan output, tidak ada orang
-          
-          Serial.print("suhu = ");           // just string
-          Serial.println(suhu);                // menampilkan nilai suhu
-          
           pirState = LOW;                    // di asumsikan tidak ada gerakan terdeteksi
     }
   }
+
+    // menampilkan pada LCD
+    delay(500);
+    lcd.print(jumlah);                 
+    lcd.print("      ||");
+    lcd.print(suhu);
+    lcd.print(" C");
+
+    //Menampilkan di python
+    if(Serial.available()) {
+      cvHitung = Serial.read();
+
+      if(cvHitung == 'Y') {
+        Serial.print("Sensor PIR Deteksi: ");
+        Serial.print(jumlah);
+
+        Serial.print("\tSuhu: ");
+        Serial.print(suhu);
+        Serial.println(" C");
+      }
+    }
 }
+

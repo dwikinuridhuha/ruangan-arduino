@@ -1,0 +1,29 @@
+From 3b7bac92b8e687b54d4c03b113813ae9cd224d6e Mon Sep 17 00:00:00 2001
+From: dwiki nuridhuha <dwiki.nuridhuha@gmail.com>
+Date: Fri, 17 Nov 2017 22:24:01 +0700
+Subject: Signed-off-by: dwiki nuridhuha <dwiki.nuridhuha@gmail.com>
+ sfasdfasdfe
+
+
+diff --git a/PIR.ino b/PIR.ino
+index afaa7c8..afa48db 100644
+--- a/PIR.ino
++++ b/PIR.ino
+@@ -31,7 +31,8 @@ void setup() {
+ }
+ 
+ void loop(){
+-  lcd.setCursor(0, 1);                      // Memulai LCD
++  lcd.setCursor(8, 0);                      // Memulai LCD
++  
+   val = digitalRead(inputPin);              // Membaca nilai masukan sensor PIR
+   
+   analogReference(INTERNAL);                // mengunakan Referensi 1.1 volt
+@@ -52,6 +53,7 @@ void loop(){
+           Serial.println(suhu);                // menampilkan nilai suhu
+           
+           lcd.print(jumlah);                 // menampilkan pada LCD
++          lcd.print(suhu);
+           
+           pirState = HIGH;                   // di asumsikan ada gerakan terdeteksi
+       }
